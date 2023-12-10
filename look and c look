@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Function to perform the Look disk scheduling algorithm
+void look(int arr[], int head, int size) {
+ int distance, total_seek_time = 0;
+ int current = head;
+ // Sorting the array to simplify the look algorithm
+ qsort(arr, size, sizeof(int), compare);
+ // Finding the index of the head
+ int index = 0;
+ while (arr[index] < head) {
+ index++;
+ }
+ // Moving towards the end
+ for (int i = index; i < size; i++) {
+ distance = abs(arr[i] - current);
+ total_seek_time += distance;
+ current = arr[i];
+ printf("Move from %d to %d with seek %d\n", current - distance, current, distance);
+ }
+ // Moving towards the beginning
+ for (int i = index - 1; i >= 0; i--) {
+ distance = abs(arr[i] - current);
+ total_seek_time += distance;
+ current = arr[i];
+ printf("Move from %d to %d with seek %d\n", current - distance, current, distance);
+ }
+ printf("Total Seek Time: %d\n", total_seek_time);
+}
+// Function to perform the C-Look disk scheduling algorithm
+void clook(int arr[], int head, int size) {
+ int distance, total_seek_time = 0;
+ int current = head;
+ // Sorting the array to simplify the clook algorithm
+ qsort(arr, size, sizeof(int), compare);
+ // Finding the index of the head
+ int index = 0;
+ while (arr[index] < head) {
+ index++;
+ }
+ // Moving towards the end
+ for (int i = index; i < size; i++) {
+ distance = abs(arr[i] - current);
+ total_seek_time += distance;
+ current = arr[i];
+ printf("Move from %d to %d with seek %d\n", current - distance, current, distance);
+ }
+ // Moving towards the beginning (circular)
+ for (int i = 0; i < index; i++) {
+ distance = abs(arr[i] - current);
+ total_seek_time += distance;
+ current = arr[i];
+ printf("Move from %d to %d with seek %d\n", current - distance, current, distance);
+ }
+ printf("Total Seek Time: %d\n", total_seek_time);
+}
+// Function to compare integers for qsort
+int compare(const void *a, const void *b) {
+ return (*(int *)a - *(int *)b);
+}
+int main() {
+ int cylinders[] = {98, 183, 37, 122, 14, 124, 65, 67};
+ int size = sizeof(cylinders) / sizeof(cylinders[0]);
+ printf("Look Algorithm:\n");
+ look(cylinders, 50, size);
+ printf("\nC-Look Algorithm:\n");
+ clook(cylinders, 50, size);
+ return 0;
+}
